@@ -1,0 +1,72 @@
+#! /bin/bash
+
+function prompt_repo {
+    OUT=""
+
+    if [ "$GIT_BRANCH" != "" ]; then
+        OUT="git"
+        if [ "$GIT_BRANCH" != "master" ]; then
+            OUT="$OUT:$GIT_BRANCH"
+        fi
+    elif [ "$HG_BRANCH" != "" ]; then
+        OUT="hg"
+        if [ "$HG_BRANCH" != "default" ]; then
+            OUT="$OUT:$HG_BRANCH"
+        fi
+    fi
+    if [ "$OUT" != "" ]; then
+        echo '{'$OUT'} '
+    fi
+}
+
+function prompt_py_env_name {
+    if [ -d "$VIRTUAL_ENV" ]; then
+        ENV_NAME=`basename "$VIRTUAL_ENV"`
+        echo "py:$ENV_NAME"
+    fi
+}
+
+function prompt_go_env_name {
+    if [ -d "$GOPATH" ]; then
+        echo "go:$GOPATH" | sed -e 's|'$HOME'|~|'
+    fi
+}
+
+function prompt_env {
+    PY_ENV=`prompt_py_env_name`
+    GO_ENV=`prompt_go_env_name`
+    ENV_STRING=`echo $PY_ENV $GO_ENV`
+    if [ "$ENV_STRING" != "" ]; then
+        echo "($ENV_STRING) "
+    fi
+}
+
+
+function prompt_exit_status {
+    EXIT_STATUS="$?"
+    if [ "$EXIT_STATUS" != "0" ]; then
+        echo "$EXIT_STATUS "
+    fi
+}
+
+function prompt_update_hg {
+    HG_BRANCH=`/usr/local/bin/hg branch 2> /dev/null`
+}
+
+function prompt_update_git {
+    GIT_BRANCH=`/usr/bin/git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+}
+
+function prompt_cmd {
+    if [ "$PWD" != "$_PROMPT_OLDPWD" ]; then
+        _PROMPT_OLDPWD="$PWD"
+        prompt_update_hg
+        prompt_update_git
+    fi
+}
+
+function git { /usr/bin/git "$@" && prompt_update_git; }
+function hg { /usr/local/bin/hg "$@" && prompt_update_hg; }
+
+export PROMPT_COMMAND=prompt_cmd
+export PS1="\[\e[0;34m\]\$(prompt_exit_status)\[\e[0;31m\]\$(prompt_env)\[\e[0;36m\]\$(prompt_repo)\[\e[0;32m\]\w \[\e[0;33m\]$\[\e[0m\] "

@@ -1,0 +1,7 @@
+STFILESIZE=10000
+HISTSIZE=10000
+
+PATH="$HOME/bin:$PATH"
+
+export CLICOLOR="true"
+
