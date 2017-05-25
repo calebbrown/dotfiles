@@ -1,5 +1,3 @@
-nerdcommenter
-syntastic
-vim-airline
-vim-airline-themes
-vundle
+*
+!Vundle.vim
+!.gitignore
