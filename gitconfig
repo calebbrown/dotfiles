@@ -1,0 +1,6 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Caleb Brown
+	email = git@calebbrown.id.au
+[core]
+	editor = /usr/bin/vim
