@@ -30,6 +30,7 @@ if isdirectory(expand('$HOME/.vim/bundle/Vundle.vim'))
   Plugin 'vim-airline/vim-airline-themes'
   Plugin 'scrooloose/syntastic'
   Plugin 'scrooloose/nerdcommenter'
+  Plugin 'mhinz/vim-signify'
   " Plugin 'ctrlpvim/ctrlp.vim'
 
   call vundle#end()
